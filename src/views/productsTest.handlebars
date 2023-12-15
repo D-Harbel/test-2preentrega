@@ -1,0 +1,153 @@
+<h1>Lista de Productos</h1>
+
+<ul>
+<script>
+      var limite = 7;
+      var apiUrl = '/api/products?limit=' +limite;
+
+      fetch(apiUrl) 
+      .then(response => {
+      if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    
+    // payload es el nombre del archivo que envia tu backend
+    // como trae varios datos, aca asignamos todo lo que trae a la constante "arrayOfObjects"
+    const arrayOfObjects = data.payload;
+
+    // Como arrayOfObjects va a tener muchos datos, lo que hacemos ahora es separar cada uno de los datos
+    // para eso usamos "item"
+    // el .forEach entra y agarra un solo valor de "arrayOfObjects" cada vez que entra
+    
+  // Crear la tabla y su encabezado
+            var tableHTML = '<table border="1"><thead><tr><th>Nombre</th><th>Codigo</th></tr></thead><tbody>';
+
+            arrayOfObjects.forEach(item => {
+                // Agregar filas a la tabla con los datos reales
+                tableHTML += `<tr><td>${item.title}</td><td>${item.code}</td></tr>`;
+            });
+
+            // Cerrar la tabla
+            tableHTML += '</tbody></table>';
+
+            // Insertar la tabla en el documento
+            document.body.innerHTML = tableHTML;
+
+
+    })
+  
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+</script>
+
+    {{!-- {{#each products}} --}}
+        {{!-- <li> --}}
+            {{!-- {{this.title}} - {{this.description}}  --}}
+
+{{!-- 
+ <script> 
+  fetch('/api/products?limit=2')
+  .then(res => res.json())
+  .then(data => {
+    // Check if data is an array before using forEach
+    if (Array.isArray(data)) {
+      data.forEach(product => {
+        const markup = `<li>${payload.title}</li>`;
+        document.querySelector('ul').insertAdjacentHTML('beforeend', markup);
+      });
+    } else {
+      console.error('Expected an array of products, but received:', data);
+    }
+  })
+  .catch(error => {
+    console.error('Error during fetch:', error);
+  });
+
+  
+   {{!-- fetch('/api/products?limit=2')
+         .then(response => response.json())
+            .then(products => console.log(products)); --}}
+            
+
+
+          {{!-- fetch('/api/products?limit=2')
+            .then(res => { return res.json();
+            })
+            .then(data => {
+              data.forEach(productsdata => {
+                const markup = `<li>${productsdata.payload.title}</li>`;
+                document.querySelector('ul').insertAdjacentHTML('beforeend', markup);
+            });
+            }) 
+            .catch(error = console.log(error)); 
+            
+            </script> --}} 
+
+            <button onclick="addToCart('{{this._id}}', '{{this.title}}')">Agregar al carrito</button>
+        </li>
+    {{!-- {{/each}} --}}
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{{!-- {{#if productsData.payload.length}}
+<table border="1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each productsData.payload}}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+              
+                </tr>
+     
+            {{/each}}
+        </tbody>
+    </table> --}}
+
+
+
+<br>
+<a href="/views/products/?pagina=1">Pág.1</a>
+
+{{#if hasPrevPage}}
+    <a href="/views/products/?pagina={{prevPage}}">Pág.Ant.</a>
+{{else}}
+    <span>Pág.Ant.</span>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/?pagina={{nextPage}}">Pág.Sig.</a>
+{{else}}
+    <span>Pág.Sig.</span>
+{{/if}}
+
+<a href="/?pagina={{totalPages}}">Ult.Pág.</a>
+
